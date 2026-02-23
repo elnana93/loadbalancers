@@ -62,25 +62,8 @@ aws ssm start-session --region us-west-2 --target i-013342db7df1a0d52
 
 
 
-0-Auth.tf
-        1-VPC.tf
-        10-CloudWatch.tf
-        11-SSM.tf
-        12-SNS.tf
-        13-VPCEndpoints.tf
-        14-LoadBalancer.tf
-        15-Route53.tf
-        2-Subnets.tf
-        3-Route.tf
-        4-SG.tf
-        5-EC2.tf
-        6-RDS.tf
-        7-SecretsManager.tf
-        8-Roles.tf
-        9-Lambda.tf
-        Backend.tf
-
-
-
+git status
+git add *.tf
+git status
 
  */
