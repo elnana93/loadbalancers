@@ -153,12 +153,3 @@ resource "aws_security_group" "e5_alb_sg01" {
   }
 }
 
-# Allow ALB -> private EC2 on app port
-resource "aws_security_group_rule" "e5_ec2_ingress_from_alb01" {
-  type                     = "ingress"
-  security_group_id        = aws_security_group.sg_ec2_lab.id
-  from_port                = 80
-  to_port                  = 80
-  protocol                 = "tcp"
-  source_security_group_id = aws_security_group.e5_alb_sg01.id
-}
