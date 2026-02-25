@@ -88,7 +88,7 @@ variable "ami_owners" {
 variable "ami_name_pattern" {
   type        = string
   description = "AMI name pattern filter"
-  default     = "al2023-ami-*-x86_64"
+  default     = "al2023-ami-2023*-x86_64"
 }
 
 variable "index_message" {

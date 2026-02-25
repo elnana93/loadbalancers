@@ -10,10 +10,10 @@
 
 
 locals {
-  project_name            = "e5"
-  enable_waf              = true
-  waf_log_destination     = "cloudwatch" # "cloudwatch" | "s3" | "firehose"
-  waf_log_retention_days  = 14
+  project_name           = "e5"
+  enable_waf             = true
+  waf_log_destination    = "cloudwatch" # "cloudwatch" | "s3" | "firehose"
+  waf_log_retention_days = 14
 }
 
 ############################################
@@ -239,3 +239,6 @@ resource "aws_wafv2_web_acl_association" "e5_waf_assoc01" {
   resource_arn = aws_lb.e5_alb01.arn
   web_acl_arn  = aws_wafv2_web_acl.e5_waf01[0].arn
 }
+
+
+

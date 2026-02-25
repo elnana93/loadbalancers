@@ -6,7 +6,12 @@ data "aws_ami" "al2023" {
 
   filter {
     name   = "name"
-    values = [var.ami_name_pattern]
+    values = ["al2023-ami-2023*-x86_64"]
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
   }
 }
 
@@ -45,6 +50,17 @@ EOF
 
 }
 
+output "ec2_instance_id" {
+  description = "EC2 instance ID for the lab app server"
+  value       = aws_instance.lab_ec2_app.id
+}
+output "selected_ami_id" {
+  value = data.aws_ami.al2023.id
+}
+
+output "selected_ami_name" {
+  value = data.aws_ami.al2023.name
+}
 
 /* output "lab_ec2_instance_profile_name" {
   value = aws_iam_instance_profile.lab_ec2_profile.name
