@@ -43,7 +43,7 @@ resource "aws_cloudwatch_metric_alarm" "lab1b_db_failure_alarm" {
 ############################################
 # CloudWatch Alarm: ALB 5xx -> SNS
 ############################################
-
+# INSUFFICIENT_DATA is expected here on the console because of low traffic + missing datapoints.
 resource "aws_cloudwatch_metric_alarm" "e5_alb_5xx_alarm01" {
   alarm_name          = "e5-alb-5xx-alarm01"
   comparison_operator = "GreaterThanOrEqualToThreshold"
