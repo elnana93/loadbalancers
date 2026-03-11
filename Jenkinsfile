@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/elnana93/LoadBalancers.git'
+                checkout scm
             }
         }
 
@@ -33,21 +33,8 @@ pipeline {
                 }
             }
         }
-
-        stage('Terraform Apply') {
-            steps {
-                input message: 'Apply Terraform changes?'
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'Jenkins_Access_Id'
-                ]]) {
-                    sh 'terraform apply -auto-approve tfplan'
-                }
-            }
-        }
     }
 }
-
 
 
 /*
