@@ -1,10 +1,8 @@
 pipeline {
     agent any
-    
+
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('aws-access-key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
-        AWS_DEFAULT_REGION    = 'us-west-2'
+        AWS_DEFAULT_REGION = 'us-west-2'
     }
 
     stages {
@@ -13,16 +11,38 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/elnana93/LoadBalancers.git'
             }
         }
-        
+
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'Jenkins_Access_Id'
+                ]]) {
+                    sh 'terraform init'
+                }
             }
         }
-        
+
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan -out=tfplan'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'Jenkins_Access_Id'
+                ]]) {
+                    sh 'terraform plan -out=tfplan'
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                input message: 'Apply Terraform changes?'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'Jenkins_Access_Id'
+                ]]) {
+                    sh 'terraform apply -auto-approve tfplan'
+                }
             }
         }
     }
