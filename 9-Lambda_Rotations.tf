@@ -1,13 +1,13 @@
-
 ############################################
 # Lambda for Secrets Manager MySQL Rotation
 ############################################
 
-locals {
-  rotation_zip = "${path.module}/dist/rotation.zip"
+data "archive_file" "mysql_rotation_zip" {
+  type        = "zip"
+  source_file = "${path.module}/lambda/mysql_rotation/lambda_function.py"
+  output_path = "${path.module}/mysql_rotation.zip"
 }
 
-# Log group (optional but nice)
 resource "aws_cloudwatch_log_group" "mysql_rotation" {
   name              = "/aws/lambda/lab-mysql-rotation"
   retention_in_days = 14
@@ -16,8 +16,6 @@ resource "aws_cloudwatch_log_group" "mysql_rotation" {
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
 
-
-# The Lambda function (uploads your already-built dist/rotation.zip)
 resource "aws_lambda_function" "mysql_rotation" {
   function_name = "lab-mysql-rotation"
 
@@ -25,10 +23,8 @@ resource "aws_lambda_function" "mysql_rotation" {
   handler = "lambda_function.lambda_handler"
   runtime = "python3.11"
 
-  filename         = "${path.module}/dist/rotation.zip"
-  source_code_hash = filebase64sha256("${path.module}/dist/rotation.zip")
-
-
+  filename         = data.archive_file.mysql_rotation_zip.output_path
+  source_code_hash = data.archive_file.mysql_rotation_zip.output_base64sha256
 
   timeout     = 120
   memory_size = 256
@@ -36,10 +32,8 @@ resource "aws_lambda_function" "mysql_rotation" {
   environment {
     variables = {
       SECRETS_MANAGER_ENDPOINT = "https://secretsmanager.${data.aws_region.current.name}.${data.aws_partition.current.dns_suffix}"
-
-      # optional, but helpful (and avoids the password chars that broke RDS earlier)
-      EXCLUDE_CHARACTERS = "/@\\\" "
-      PASSWORD_LENGTH    = "24"
+      EXCLUDE_CHARACTERS       = "/@\\\" "
+      PASSWORD_LENGTH          = "24"
     }
   }
 
@@ -54,7 +48,6 @@ resource "aws_lambda_function" "mysql_rotation" {
   depends_on = [aws_cloudwatch_log_group.mysql_rotation]
 }
 
-# Allow Secrets Manager to invoke the Lambda for THIS secret
 resource "aws_lambda_permission" "allow_secretsmanager_invoke" {
   statement_id  = "AllowSecretsManagerInvoke"
   action        = "lambda:InvokeFunction"
@@ -62,5 +55,3 @@ resource "aws_lambda_permission" "allow_secretsmanager_invoke" {
   principal     = "secretsmanager.amazonaws.com"
   source_arn    = aws_secretsmanager_secret.rds_mysql.arn
 }
-
-

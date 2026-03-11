@@ -15,9 +15,14 @@ data "aws_ami" "al2023" {
   }
 }
 
-locals {
+# This is the old version but do Jenkins pipelines it rejected it, Now i will check out this new block
+/* locals {
   startup_b64 = base64encode(file("${path.module}/startup.sh"))
+} */
+locals {
+  startup_b64 = base64encode(file("${path.module}/scripts/startup.sh"))
 }
+
 
 resource "aws_instance" "lab_ec2_app" {
   ami           = data.aws_ami.al2023.id
