@@ -49,9 +49,9 @@ resource "aws_cloudwatch_metric_alarm" "e5_alb_5xx_alarm01" {
   comparison_operator = "GreaterThanOrEqualToThreshold"
 
   # Hardcoded defaults (tweak as needed)
-  evaluation_periods = 2        # evaluate across 2 periods
-  threshold          = 5        # 5xx count threshold (Sum)
-  period             = 60       # seconds per period
+  evaluation_periods = 2  # evaluate across 2 periods
+  threshold          = 5  # 5xx count threshold (Sum)
+  period             = 60 # seconds per period
   statistic          = "Sum"
 
   namespace   = "AWS/ApplicationELB"
@@ -86,8 +86,8 @@ resource "aws_cloudwatch_dashboard" "e5_dashboard01" {
         height = 6
         properties = {
           metrics = [
-            ["AWS/ApplicationELB", "RequestCount",        "LoadBalancer", aws_lb.e5_alb01.arn_suffix],
-            [".",                  "HTTPCode_ELB_5XX_Count", ".",         aws_lb.e5_alb01.arn_suffix]
+            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", aws_lb.e5_alb01.arn_suffix],
+            [".", "HTTPCode_ELB_5XX_Count", ".", aws_lb.e5_alb01.arn_suffix]
           ]
           period = 300
           stat   = "Sum"

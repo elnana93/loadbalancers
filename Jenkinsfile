@@ -12,13 +12,11 @@ pipeline {
             }
         }
 
-        stage('Terraform Init') {
-            steps {
-                sh '''
-                    terraform init
-                '''
+     stage('Terraform Init') {
+        steps {
+            sh 'terraform init -reconfigure'
             }
-        }
+}
 
         stage('Terraform Plan') {
             steps {
