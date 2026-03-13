@@ -116,6 +116,7 @@ data "aws_caller_identity" "current" {}
 # Explanation: This bucket stores ALB access logs.
 resource "aws_s3_bucket" "e5_alb_logs_bucket01" {
   bucket = "e5-alb-logs-${data.aws_caller_identity.current.account_id}"
+  # force_destroy = true # So terraform destroy doesn't fail if there are logs in the bucket. Use with caution in production!
 
   tags = {
     Name = "e5_alb_logs_bucket01"
