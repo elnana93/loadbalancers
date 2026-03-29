@@ -90,7 +90,7 @@ resource "aws_lb_listener" "e5_https_listener01" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
 
-  certificate_arn = aws_acm_certificate_validation.e5_site_cert_validation01.certificate_arn
+  certificate_arn = aws_acm_certificate.e5_site_cert01.arn
 
   default_action {
     type             = "forward"
